@@ -7,10 +7,10 @@
 4. Запустить контейнер с работающей БД 
 	docker run --name postgres-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=postgres -d -p 5432:5432 -v postgres-data:/var/lib/postgresql postgres:18
 5. Завести GitHub профиль, сделать форк https://github.com/igdmedvedev/JavaPractice
-	Скачать:
-		Git: https://git-scm.com/install/windows 
-		GitHub Desktop: https://github.com/apps/desktop
-	Сделать git clone, настроить в IDE подключение к git'у, сделать тестовый коммит.
+	* Скачать:
+		* Git: https://git-scm.com/install/windows 
+		* GitHub Desktop: https://github.com/apps/desktop
+	* Сделать git clone, настроить в IDE подключение к git'у, сделать тестовый коммит.
 
 Почитать про создание/редактирование таблиц (если все знаешь, то можешь по диагонали).
 * https://postgrespro.ru/docs/postgresql/current/ddl
