@@ -6,6 +6,7 @@ import org.example.entity.Creditor;
 import org.example.ui.GenericTableFrame;
 
 public class Main {
+    /////
     public static void main(String[] args) {
         DbConnector connector = new DbConnector();
 
