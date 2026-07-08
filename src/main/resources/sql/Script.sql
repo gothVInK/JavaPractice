@@ -29,9 +29,9 @@ insert into client (client_code) values (5)
 
 
 create table client_account(
-	account_number integer not null,
-	client_code integer references client not null,
-	contribution_code integer references contribution not null,
+	account_number integer primary key not null,
+	client_code integer references client not null unique,
+	contribution_code integer references contribution not null unique,
 	opening_date date not null,
 	closing_date date not null,
 	invested_amount real not null
