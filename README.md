@@ -6,7 +6,7 @@
 3. Скачать и установить Docker Desktop
 4. Запустить контейнер с работающей БД 
 	docker run --name postgres-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=postgres -d -p 5432:5432 -v postgres-data:/var/lib/postgresql postgres:18
-5. Завести GitHub профиль, сделать форк https://github.com/igdmedvedev/JavaPractice
+5. Завести GitHub профиль, сделать форк https://github.com/igdmedvedev/JavaPractice , сделать новую ветку (branch) с названием dev
 	* Скачать:
 		* Git: https://git-scm.com/install/windows 
 		* GitHub Desktop: https://github.com/apps/desktop
