@@ -4,12 +4,11 @@ import org.example.dao.common.DbConnector;
 import org.example.dao.common.IEntityRepository;
 import org.example.entity.Creditor;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CreditorRepostitory implements IEntityRepository<Creditor> {
     @Override
@@ -23,8 +22,11 @@ public class CreditorRepostitory implements IEntityRepository<Creditor> {
                 Integer id = rs.getInt("id");
                 String name = rs.getString("name");
                 Integer age = rs.getInt("age");
+                Date startDate = rs.getDate("startDate");
 
-                result.add(new Creditor(id, name, age));
+                LocalDate startLocalDate = startDate != null ? startDate.toLocalDate() : null;
+
+                result.add(new Creditor(id, name, age, startLocalDate));
             }
 
         } catch (SQLException e) {
@@ -37,12 +39,13 @@ public class CreditorRepostitory implements IEntityRepository<Creditor> {
     @Override
     public void saveEntity(Creditor e) {
         String strStmt = """
-                insert into creditor (name, age)
-                values (?, ?)
+                insert into creditor (name, age, startDate)
+                values (?, ?, ?)
                 """;
         try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
             stmt.setString(1, e.getName());
             stmt.setInt(2, e.getAge());
+            stmt.setDate(3, e.getStartDate());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
@@ -53,13 +56,14 @@ public class CreditorRepostitory implements IEntityRepository<Creditor> {
     public boolean updateEntity(Creditor e) {
         String strStmt = """
                 update creditor
-                set name = ?, age = ?
+                set name = ?, age = ?, startDate = ?
                 where id = ?
                 """;
         try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
             stmt.setString(1, e.getName());
             stmt.setInt(2, e.getAge());
-            stmt.setInt(3, e.getPk());
+            stmt.setDate(3, e.getStartDate());
+            stmt.setInt(4, e.getPk());
 
             return stmt.executeUpdate() != 0;
         } catch (SQLException ex) {

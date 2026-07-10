@@ -5,18 +5,23 @@ import org.example.entity.common.Column;
 import org.example.entity.common.IEntity;
 import org.example.entity.common.NonEditColumn;
 import org.example.entity.common.SequenceColumn;
+import org.jdatepicker.JDatePicker;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class EntityEditor<T extends IEntity> extends JDialog {
     private T entity;
 
     private boolean confirmed = false;
-    private final Map<String, JTextField> fieldComponents = new HashMap<>();
+    private final Map<String, Component> fieldComponents = new HashMap<>();
 
     public EntityEditor(JFrame parent, String title, Class<T> entityClass, IEntityRepository<T> repository, boolean isNew, T selectedEntity) {
         super(parent, title, true);
@@ -26,12 +31,12 @@ public class EntityEditor<T extends IEntity> extends JDialog {
         fieldsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Через рефлексию получаем все поля сущности и создаем для них поля ввода
-        java.util.List<Field> fields = getFieldsWithColumnAnnotation(entityClass, Column.class);
+        java.util.List<Field> fields = IEntityRepository.getFieldsWithAnnotation(entityClass, Column.class);
         java.util.Map<String, String> inputMap = new java.util.HashMap<>();
 
         Map<String, String> predefinedValues;
         try {
-            predefinedValues = getColumnsStringValue(selectedEntity);
+            predefinedValues = IEntityRepository.getColumnsStringValue(selectedEntity);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -44,20 +49,48 @@ public class EntityEditor<T extends IEntity> extends JDialog {
                 continue;
             }
 
-            String label = getColumnTitle(field);
+            String label = IEntityRepository.getColumnTitle(field);
             fieldsPanel.add(new JLabel(label + ":"));
 
-            JTextField textField = new JTextField();
-            if (!isNew && field.isAnnotationPresent(NonEditColumn.class)) {
-                textField.setEditable(false);
+            Component fieldComponent;
+            if (field.getType().equals(LocalDate.class)) {
+                UtilDateModel model = new UtilDateModel();
+                if (predefinedValues != null) {
+                    String value = predefinedValues.get(label);
+                    if (value != null && !value.isEmpty()) {
+                        LocalDate date = LocalDate.parse(value);
+                        model.setDate(date.getYear(), date.getMonthValue() - 1, date.getDayOfMonth());
+                        model.setSelected(true);
+                    }
+                }
+
+                Properties p = new Properties();
+                p.put("text.today", "Сегодня");
+                p.put("text.month", "Месяц");
+                p.put("text.year", "Год");
+
+                JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
+                JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+                fieldComponent = datePicker;
+
+                if (!isNew && field.isAnnotationPresent(NonEditColumn.class)) {
+                    datePicker.setTextEditable(false);
+                }
+            } else {
+                JTextField textField = new JTextField();
+                fieldComponent = textField;
+
+                if (!isNew && field.isAnnotationPresent(NonEditColumn.class)) {
+                    textField.setEditable(false);
+                }
+
+                if (predefinedValues != null) {
+                    textField.setText(predefinedValues.get(label));
+                }
             }
 
-            if (predefinedValues != null) {
-                textField.setText(predefinedValues.get(label));
-            }
-
-            fieldsPanel.add(textField);
-            fieldComponents.put(field.getName(), textField);
+            fieldsPanel.add(fieldComponent);
+            fieldComponents.put(field.getName(), fieldComponent);
         }
 
         add(fieldsPanel, BorderLayout.CENTER);
@@ -68,8 +101,16 @@ public class EntityEditor<T extends IEntity> extends JDialog {
 
         okButton.addActionListener(e -> {
             java.util.Map<String, String> values = new java.util.HashMap<>();
-            for (java.util.Map.Entry<String, JTextField> entry : fieldComponents.entrySet()) {
-                values.put(entry.getKey(), entry.getValue().getText());
+            for (java.util.Map.Entry<String, Component> entry : fieldComponents.entrySet()) {
+                String text = "";
+                if (entry.getValue() instanceof JTextField) {
+                    text = ((JTextField)entry.getValue()).getText();
+                } else if (entry.getValue() instanceof JDatePicker) {
+                    Date date = (Date)((JDatePicker)entry.getValue()).getModel().getValue();
+                    LocalDate localeDate = date != null ? date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+                    text = localeDate != null ? localeDate.toString() : null;
+                }
+                values.put(entry.getKey(), text);
             }
 
             try {
@@ -93,52 +134,6 @@ public class EntityEditor<T extends IEntity> extends JDialog {
 
         pack();
         setLocationRelativeTo(parent);
-    }
-
-    public static java.util.List<Field> getFieldsWithColumnAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
-        java.util.List<Field> annotatedFields = new ArrayList<>();
-        Field[] fields = clazz.getDeclaredFields();
-
-        for (Field field : fields) {
-            if (field.isAnnotationPresent(annotation)) {
-                annotatedFields.add(field);
-            }
-        }
-
-        return annotatedFields;
-    }
-
-    public static Map<String, String> getColumnsStringValue(Object entity) throws IllegalAccessException {
-        if (entity == null) {
-            return null;
-        }
-
-        Map<String, String> ret = new HashMap<>();
-        for (Field field : getFieldsWithColumnAnnotation(entity.getClass(), Column.class)) {
-            field.setAccessible(true);
-            ret.put(getColumnTitle(field), String.valueOf(field.get(entity)));
-        }
-        return ret;
-    }
-
-    public static String getColumnTitle(Field field) {
-        Column column = field.getAnnotation(Column.class);
-        if (column != null && !column.title().isEmpty()) {
-            return column.title();
-        }
-        return field.getName();
-    }
-
-    public void setInitialValues(Map<String, String> values) {
-        if (values == null) {
-            return;
-        }
-        for (java.util.Map.Entry<String, JTextField> entry : fieldComponents.entrySet()) {
-            String fieldName = entry.getKey();
-            if (values.containsKey(fieldName)) {
-                entry.getValue().setText(values.get(fieldName));
-            }
-        }
     }
 
     public boolean isConfirmed() {

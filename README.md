@@ -6,7 +6,7 @@
 3. Скачать и установить Docker Desktop
 4. Запустить контейнер с работающей БД 
 	docker run --name postgres-db -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=postgres -d -p 5432:5432 -v postgres-data:/var/lib/postgresql postgres:18
-5. Завести GitHub профиль, сделать форк https://github.com/igdmedvedev/JavaPractice
+5. Завести GitHub профиль, сделать форк https://github.com/igdmedvedev/JavaPractice , сделать новую ветку (branch) с названием dev
 	* Скачать:
 		* Git: https://git-scm.com/install/windows 
 		* GitHub Desktop: https://github.com/apps/desktop
@@ -27,6 +27,7 @@
 * каждый вид вклада связан с несколькими счетами клиентов. Счет относится к одному виду вклада.
 * вклад некоторого вида не обязательно может быть связан со счетами клиентов. Каждый счет клиента обязательно связан с неко-торым видом вклада.
 
+Когда таблицы будут спроеткированы - нужно будет закоммитить .sql файл с командами, которые создают таблицы (опционально, вносит тестовые данные). Файл должен распологаться по пути src/main/resources/sql/install.sql
 
 Java приложение:
 Большая часть GUI кода написана в приложении от которого сделан форк. 
