@@ -1,6 +1,12 @@
 package org.example.ui;
 
+import org.example.dao.ClientAccountRepository;
+import org.example.dao.ClientRepository;
+import org.example.dao.ContributionRepository;
 import org.example.dao.common.IEntityRepository;
+import org.example.entity.Client;
+import org.example.entity.ClientAccount;
+import org.example.entity.Contribution;
 import org.example.entity.common.Column;
 import org.example.entity.common.IEntity;
 
@@ -59,15 +65,30 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         JButton btnDelete = new JButton("Delete");
         JButton btnRefresh = new JButton("Refresh");
 
+        //
+        JButton btnContribution = new JButton("Contribution");
+        JButton btnClientAccount = new JButton("Client Account");
+        JButton btnClient = new JButton("Client");
+
         btnAdd.addActionListener(this::onAdd);
         btnEdit.addActionListener(this::onEdit);
         btnDelete.addActionListener(this::onDelete);
         btnRefresh.addActionListener(e -> refreshTable());
 
+        //
+        btnContribution.addActionListener(this::Contribution);
+        btnClientAccount.addActionListener(this::ClientAccount);
+        btnClient.addActionListener(this::Client);
+
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnDelete);
         buttonPanel.add(btnRefresh);
+
+        //
+        buttonPanel.add(btnContribution);
+        buttonPanel.add(btnClientAccount);
+        buttonPanel.add(btnClient);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }
@@ -127,6 +148,36 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
 
     private Object[] entityToRow(T entity) {
         return repository.toRow(entity);
+    }
+
+    private void Contribution(ActionEvent e) {
+        ContributionRepository ContributionRepository = new ContributionRepository();
+        GenericTableFrame<Contribution> frame = new GenericTableFrame<>(
+                "Contribution",
+                Contribution.class,
+                ContributionRepository
+        );
+        frame.setVisible(true);
+    }
+
+    private void ClientAccount (ActionEvent e){
+        ClientAccountRepository ClientAccountRepository = new ClientAccountRepository();
+        GenericTableFrame<ClientAccount> frame = new GenericTableFrame<>(
+                "Client Account",
+                ClientAccount.class,
+                ClientAccountRepository
+        );
+        frame.setVisible(true);
+    }
+
+    private void Client (ActionEvent e){
+        ClientRepository ClientRepository = new ClientRepository();
+        GenericTableFrame<Client> frame = new GenericTableFrame<>(
+                "Client",
+                Client.class,
+                ClientRepository
+        );
+        frame.setVisible(true);
     }
 
     private void onAdd(ActionEvent e) {

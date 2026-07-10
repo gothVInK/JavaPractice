@@ -58,10 +58,10 @@ public class ContributionRepository implements IEntityRepository<Contribution> {
                 where contribution_code = ?
                 """;
         try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
-            stmt.setInt(4, e.getPk());
-            stmt.setInt(2, e.getMonths());
             stmt.setString(1, e.getName());
+            stmt.setInt(2, e.getMonths());
             stmt.setDouble(3,e.getRate());
+            stmt.setInt(4, e.getPk());
 
             return stmt.executeUpdate() != 0;
         } catch (SQLException ex) {
