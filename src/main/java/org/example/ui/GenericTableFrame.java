@@ -87,9 +87,21 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
 
         // Очищаем и заполняем строки
         tableModel.setRowCount(0);
+        List<Field> columnFields = IEntityRepository.getFieldsWithAnnotation(entityClass, Column.class);
         for (T entity : data) {
-            tableModel.addRow(entityToRow(entity));
+            Object[] row = new Object[columnFields.size()];
+            for (int i = 0; i < columnFields.size(); i++) {
+                try {
+                    Field f = columnFields.get(i);
+                    f.setAccessible(true);
+                    row[i] = f.get(entity);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            tableModel.addRow(row);
         }
+
     }
 
     private void setupColumnsFromEntity() {
