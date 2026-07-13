@@ -85,4 +85,15 @@ public class CreditorRepostitory implements IEntityRepository<Creditor> {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
+
+    @Override
+    public boolean deleteEntityConcat(String pk) {
+        //так делать нельзя, показываю только в учебных целях
+        String strStmt = "delete from creditor where id = " + pk;
+        try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
+            return stmt.executeUpdate() != 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+    }
 }

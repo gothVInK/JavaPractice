@@ -57,16 +57,19 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         JButton btnAdd = new JButton("Add");
         JButton btnEdit = new JButton("Edit");
         JButton btnDelete = new JButton("Delete");
+        JButton btnDeleteById = new JButton("Delete by id");
         JButton btnRefresh = new JButton("Refresh");
 
         btnAdd.addActionListener(this::onAdd);
         btnEdit.addActionListener(this::onEdit);
         btnDelete.addActionListener(this::onDelete);
+        btnDeleteById.addActionListener(this::onDeleteById);
         btnRefresh.addActionListener(e -> refreshTable());
 
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnDelete);
+        buttonPanel.add(btnDeleteById);
         buttonPanel.add(btnRefresh);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -179,6 +182,32 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
             repository.deleteEntity(selected.getPk());
             refreshTable();
             JOptionPane.showMessageDialog(this, "Row deleted");
+        }
+    }
+
+    private void onDeleteById(ActionEvent e) {
+        try {
+            String idStr = JOptionPane.showInputDialog(this, "Enter ID to delete:", "Delete by ID", JOptionPane.QUESTION_MESSAGE);
+            if (idStr == null || idStr.trim().isEmpty()) {
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Do you really want to delete the record with ID = " + idStr + "?",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                repository.deleteEntityConcat(idStr);
+                refreshTable();
+                JOptionPane.showMessageDialog(this, "Record with ID " + idStr + " was deleted.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error during deletion: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
