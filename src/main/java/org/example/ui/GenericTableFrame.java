@@ -146,10 +146,6 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         }
     }
 
-    private Object[] entityToRow(T entity) {
-        return repository.toRow(entity);
-    }
-
     private void Contribution(ActionEvent e) {
         ContributionRepository ContributionRepository = new ContributionRepository();
         GenericTableFrame<Contribution> frame = new GenericTableFrame<>(

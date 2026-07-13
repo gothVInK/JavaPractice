@@ -66,10 +66,10 @@ public class ClientRepository implements IEntityRepository<Client> {
         try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
             stmt.setString(1, e.getFirstName());
             stmt.setString(2, e.getMiddleName());
-            stmt.setString(3,e.getLastName());
-            stmt.setString(4,e.getPassportNumber());
-            stmt.setString(5,e.getClientAdress());
-            stmt.setString(6,e.getPhoneNumber());
+            stmt.setString(3, e.getLastName());
+            stmt.setString(4, e.getPassportNumber());
+            stmt.setString(5, e.getClientAdress());
+            stmt.setString(6, e.getPhoneNumber());
             stmt.setInt(7, e.getPk());
 
             return stmt.executeUpdate() != 0;
@@ -90,10 +90,5 @@ public class ClientRepository implements IEntityRepository<Client> {
         } catch (SQLException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
-    }
-
-    @Override
-    public Object[] toRow(Client e) {
-        return new Object[] {e.getPk(), e.getFirstName(), e.getMiddleName(), e.getLastName(), e.getPassportNumber(), e.getClientAdress(), e.getPhoneNumber()};
     }
 }

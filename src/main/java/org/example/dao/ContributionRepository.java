@@ -82,10 +82,4 @@ public class ContributionRepository implements IEntityRepository<Contribution> {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
-
-    @Override
-    public Object[] toRow(Contribution e) {
-        return new Object[] {e.getPk(), e.getName(), e.getMonths(), e.getRate()};
-    }
-
 }

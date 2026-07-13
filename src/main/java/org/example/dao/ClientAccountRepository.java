@@ -24,7 +24,7 @@ public class ClientAccountRepository implements IEntityRepository<ClientAccount>
                 LocalDate openingLocaleDate = openingDate != null ? openingDate.toLocalDate() : null;
 
                 Date closingDate = rs.getDate("closing_date");
-                LocalDate closingLocalDate = openingDate != null ? closingDate.toLocalDate() : null;
+                LocalDate closingLocalDate = closingDate != null ? closingDate.toLocalDate() : null;
 
                 Float investedAmount = rs.getFloat("invested_amount");
 
@@ -89,10 +89,5 @@ public class ClientAccountRepository implements IEntityRepository<ClientAccount>
         } catch (SQLException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
-    }
-
-    @Override
-    public Object[] toRow(ClientAccount e) {
-        return new Object[] {e.getPk(), e.getClientCode(), e.getContributionCode(), e.getOpeningDate(), e.getClosingDate(), e.getInvestedAmount()};
     }
 }
