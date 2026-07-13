@@ -18,8 +18,6 @@ public interface IEntityRepository<T extends IEntity> {
     boolean updateEntity(T e);
     boolean deleteEntity(Object pk);
 
-    Object[] toRow(T e);
-
     static java.util.List<Field> getFieldsWithAnnotation(Class<?> clazz, Class<? extends Annotation> annotation) {
         java.util.List<Field> annotatedFields = new ArrayList<>();
         Field[] fields = clazz.getDeclaredFields();

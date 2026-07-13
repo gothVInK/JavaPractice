@@ -85,9 +85,4 @@ public class CreditorRepostitory implements IEntityRepository<Creditor> {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
-
-    @Override
-    public Object[] toRow(Creditor e) {
-        return new Object[] {e.getPk(), e.getName(), e.getAge()};
-    }
 }

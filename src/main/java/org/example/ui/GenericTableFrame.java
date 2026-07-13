@@ -125,10 +125,6 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         }
     }
 
-    private Object[] entityToRow(T entity) {
-        return repository.toRow(entity);
-    }
-
     private void onAdd(ActionEvent e) {
         try {
             EntityEditor<T> dialog = new EntityEditor<>(this, "Add row", entityClass, repository, true, null);
