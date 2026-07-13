@@ -16,8 +16,8 @@ values ('Sale', 24, 15.5)
 
 select * from contribution
 
-drop  table client
-drop  table client_account
+drop  table client cascade
+drop  table client_account cascade
 drop  table contribution cascade
 
 create sequence client_serial start  100
@@ -48,18 +48,18 @@ create sequence client_account_serial start  1001
 
 create table client_account(
 	account_number integer primary key not null default nextval ('client_account_serial'),
-	client_code integer references client not null unique,
-	contribution_code integer references contribution not null unique,
+	client_code integer references client not null,
+	contribution_code integer references contribution not null,
 	opening_date date not null,
 	closing_date date not null,
 	invested_amount real not null
 )
 
 insert into client_account (client_code, contribution_code, opening_date, closing_date, invested_amount) 
-values (123, 451, '2025-12-12', '2026-06-06', 100000)
+values (105, 503, '2025-12-12', '2026-06-06', 100000)
 
 insert into client_account (client_code, contribution_code, opening_date, closing_date, invested_amount) 
-values (536, 862, '2025-04-05', '2026-04-12', 500000)
+values (106, 504, '2025-04-05', '2026-04-12', 500000)
 
 
 select * from client_account

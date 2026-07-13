@@ -76,9 +76,10 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         btnRefresh.addActionListener(e -> refreshTable());
 
         //
-        btnContribution.addActionListener(this::Contribution);
-        btnClientAccount.addActionListener(this::ClientAccount);
-        btnClient.addActionListener(this::Client);
+        btnContribution.addActionListener(this::openContributionFrame);
+        btnClientAccount.addActionListener(this::openClientAccountFrame);
+        btnClient.addActionListener(this::openClientFrame);
+
 
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnEdit);
@@ -146,33 +147,39 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         }
     }
 
-    private void Contribution(ActionEvent e) {
+    private void openContributionFrame(ActionEvent e) {
         ContributionRepository ContributionRepository = new ContributionRepository();
         GenericTableFrame<Contribution> frame = new GenericTableFrame<>(
                 "Contribution",
                 Contribution.class,
                 ContributionRepository
         );
+        this.dispose();
+
         frame.setVisible(true);
     }
 
-    private void ClientAccount (ActionEvent e){
+    private void openClientAccountFrame (ActionEvent e){
         ClientAccountRepository ClientAccountRepository = new ClientAccountRepository();
         GenericTableFrame<ClientAccount> frame = new GenericTableFrame<>(
                 "Client Account",
                 ClientAccount.class,
                 ClientAccountRepository
         );
+        this.dispose();
+
         frame.setVisible(true);
     }
 
-    private void Client (ActionEvent e){
+    private void openClientFrame (ActionEvent e){
         ClientRepository ClientRepository = new ClientRepository();
         GenericTableFrame<Client> frame = new GenericTableFrame<>(
                 "Client",
                 Client.class,
                 ClientRepository
         );
+        this.dispose();
+
         frame.setVisible(true);
     }
 
