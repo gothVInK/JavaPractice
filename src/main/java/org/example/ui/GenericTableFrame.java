@@ -2,6 +2,7 @@ package org.example.ui;
 
 import org.example.dao.common.IEntityRepository;
 import org.example.entity.common.Column;
+import org.example.entity.common.EntityMetaProvider;
 import org.example.entity.common.IEntity;
 
 import javax.swing.*;
@@ -90,7 +91,7 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
 
         // Очищаем и заполняем строки
         tableModel.setRowCount(0);
-        List<Field> columnFields = IEntityRepository.getFieldsWithAnnotation(entityClass, Column.class);
+        List<Field> columnFields = EntityMetaProvider.getFieldsWithAnnotation(entityClass, Column.class);
         for (T entity : data) {
             Object[] row = new Object[columnFields.size()];
             for (int i = 0; i < columnFields.size(); i++) {
