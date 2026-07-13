@@ -80,6 +80,7 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         btnClientAccount.addActionListener(this::ClientAccount);
         btnClient.addActionListener(this::Client);
 
+
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnDelete);
@@ -153,6 +154,8 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
                 Contribution.class,
                 ContributionRepository
         );
+        this.dispose();
+
         frame.setVisible(true);
     }
 
@@ -163,6 +166,8 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
                 ClientAccount.class,
                 ClientAccountRepository
         );
+        this.dispose();
+
         frame.setVisible(true);
     }
 
@@ -173,6 +178,8 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
                 Client.class,
                 ClientRepository
         );
+        this.dispose();
+
         frame.setVisible(true);
     }
 
