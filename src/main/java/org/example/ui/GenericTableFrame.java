@@ -8,6 +8,7 @@ import org.example.entity.Client;
 import org.example.entity.ClientAccount;
 import org.example.entity.Contribution;
 import org.example.entity.common.Column;
+import org.example.entity.common.EntityMetaProvider;
 import org.example.entity.common.IEntity;
 
 import javax.swing.*;
@@ -63,6 +64,7 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         JButton btnAdd = new JButton("Add");
         JButton btnEdit = new JButton("Edit");
         JButton btnDelete = new JButton("Delete");
+        JButton btnDeleteById = new JButton("Delete by name");
         JButton btnRefresh = new JButton("Refresh");
 
         //
@@ -73,6 +75,7 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         btnAdd.addActionListener(this::onAdd);
         btnEdit.addActionListener(this::onEdit);
         btnDelete.addActionListener(this::onDelete);
+        btnDeleteById.addActionListener(this::onDeleteById);
         btnRefresh.addActionListener(e -> refreshTable());
 
         //
@@ -84,6 +87,7 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnEdit);
         buttonPanel.add(btnDelete);
+        buttonPanel.add(btnDeleteById);
         buttonPanel.add(btnRefresh);
 
         //
@@ -109,7 +113,7 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
 
         // Очищаем и заполняем строки
         tableModel.setRowCount(0);
-        List<Field> columnFields = IEntityRepository.getFieldsWithAnnotation(entityClass, Column.class);
+        List<Field> columnFields = EntityMetaProvider.getFieldsWithAnnotation(entityClass, Column.class);
         for (T entity : data) {
             Object[] row = new Object[columnFields.size()];
             for (int i = 0; i < columnFields.size(); i++) {
@@ -237,6 +241,32 @@ public class GenericTableFrame<T extends IEntity> extends JFrame {
             repository.deleteEntity(selected.getPk());
             refreshTable();
             JOptionPane.showMessageDialog(this, "Row deleted");
+        }
+    }
+
+    private void onDeleteById(ActionEvent e) {
+        try {
+            String name = JOptionPane.showInputDialog(this, "Enter name to delete:", "Delete by name", JOptionPane.QUESTION_MESSAGE);
+            if (name == null || name.trim().isEmpty()) {
+                return;
+            }
+
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Do you really want to delete the record with name = " + name + "?",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                repository.deleteEntityByName(name);
+                refreshTable();
+                JOptionPane.showMessageDialog(this, "Record with name " + name + " was deleted.");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error during deletion: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

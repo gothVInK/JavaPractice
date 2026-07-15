@@ -1,10 +1,7 @@
 package org.example.ui;
 
 import org.example.dao.common.IEntityRepository;
-import org.example.entity.common.Column;
-import org.example.entity.common.IEntity;
-import org.example.entity.common.NonEditColumn;
-import org.example.entity.common.SequenceColumn;
+import org.example.entity.common.*;
 import org.jdatepicker.JDatePicker;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -31,12 +28,12 @@ public class EntityEditor<T extends IEntity> extends JDialog {
         fieldsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Через рефлексию получаем все поля сущности и создаем для них поля ввода
-        java.util.List<Field> fields = IEntityRepository.getFieldsWithAnnotation(entityClass, Column.class);
+        java.util.List<Field> fields = EntityMetaProvider.getFieldsWithAnnotation(entityClass, Column.class);
         java.util.Map<String, String> inputMap = new java.util.HashMap<>();
 
         Map<String, String> predefinedValues;
         try {
-            predefinedValues = IEntityRepository.getColumnsStringValue(selectedEntity);
+            predefinedValues = EntityMetaProvider.getColumnsStringValue(selectedEntity);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -49,7 +46,7 @@ public class EntityEditor<T extends IEntity> extends JDialog {
                 continue;
             }
 
-            String label = IEntityRepository.getColumnTitle(field);
+            String label = EntityMetaProvider.getColumnTitle(field);
             fieldsPanel.add(new JLabel(label + ":"));
 
             Component fieldComponent;
