@@ -85,4 +85,15 @@ public class CreditorRepostitory implements IEntityRepository<Creditor> {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
+
+    @Override
+    public boolean deleteEntityByName(String name) {
+        //так делать нельзя, показываю только в учебных целях
+        String strStmt = String.format("delete from creditor where name = '%s'", name);
+        try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
+            return stmt.executeUpdate() != 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+    }
 }
