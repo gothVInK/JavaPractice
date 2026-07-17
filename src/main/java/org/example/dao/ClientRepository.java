@@ -91,4 +91,15 @@ public class ClientRepository implements IEntityRepository<Client> {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
+
+    @Override
+    public boolean deleteEntityByName(String name) {
+        String strStmt = String.format("delete from client where first_name = '%s' ", name);
+        //String strStmt = "delete from client where first_name = ?";
+        try (PreparedStatement stmt = DbConnector.getConnection().prepareStatement(strStmt)) {
+            return stmt.executeUpdate() != 0;
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+    }
 }

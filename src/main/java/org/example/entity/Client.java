@@ -21,7 +21,6 @@ public class Client implements IEntity {
     @Column(title = "Client Adress") private String client_adress;
     @Column(title = "Phone number") private String phone_number;
 
-
     public Client(Integer clientCode, String firstName, String middleName, String lastName, String passportNumber, String clientAdress, String phoneNumber) {
         this.client_code = clientCode;
         this.first_name = firstName;
@@ -44,9 +43,6 @@ public class Client implements IEntity {
         );
     }
 
-    public Client(Integer accountNumber, Integer clientCode, Integer contributionCode, LocalDate openingDate, LocalDate closingDate, Float investedAmount) {
-    }
-
     @Override
     public Integer getPk() {
         return client_code;
@@ -67,4 +63,5 @@ public class Client implements IEntity {
     public String getPhoneNumber() {
         return phone_number;
     }
+
 }

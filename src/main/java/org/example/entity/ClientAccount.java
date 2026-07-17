@@ -21,6 +21,9 @@ public class ClientAccount implements IEntity {
     @Column(title = "Closing Date") private LocalDate closing_date;
     @Column(title = "Invested Amount") private Float invested_amount;
 
+    Contribution contribution;
+    Client client;
+
 
     public ClientAccount(Integer accountNumber, Integer clientCode, Integer contributionCode, LocalDate openingDate, LocalDate closingDate, Float investedAmount) {
         this.account_number = accountNumber;
@@ -29,6 +32,12 @@ public class ClientAccount implements IEntity {
         this.opening_date = openingDate;
         this.closing_date = closingDate;
         this.invested_amount = investedAmount;
+    }
+
+    public ClientAccount(Integer accountNumber, LocalDate openingDate, LocalDate closingDate, Float investedAmount, Contribution contribution, Client client) {
+        this(accountNumber, client.getPk(), contribution.getPk(), openingDate, closingDate, investedAmount);
+        this.contribution = contribution;
+        this.client = client;
     }
 
     public ClientAccount(Map<String, String> columns) {
@@ -63,4 +72,11 @@ public class ClientAccount implements IEntity {
         return closing_date != null ? Date.valueOf(closing_date) : null;
     }
     public Float getInvestedAmount() {return invested_amount;}
+
+    public Contribution getContribution(){
+        return contribution;
+    }
+    public Client getClient(){
+        return client;
+    }
 }

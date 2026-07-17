@@ -17,6 +17,8 @@ public class Contribution implements IEntity {
     @Column(title = "Months") private Integer months;
     @Column(title = "Rate") private Double rate;
 
+    private ClientAccount account;
+
     public Contribution(Integer contributionCode, String contributionName, Integer months, Double rate) {
         this.contribution_code = contributionCode;
         this.contribution_name = contributionName;
