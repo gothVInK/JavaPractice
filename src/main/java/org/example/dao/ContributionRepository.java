@@ -2,8 +2,8 @@ package org.example.dao;
 
 import org.example.dao.common.DbConnector;
 import org.example.dao.common.IEntityRepository;
+import org.example.entity.ClientAccount;
 import org.example.entity.Contribution;
-import org.example.entity.Creditor;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -81,5 +81,10 @@ public class ContributionRepository implements IEntityRepository<Contribution> {
         } catch (SQLException ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public boolean deleteEntityByName(String name) {
+        return false;
     }
 }
